@@ -1,0 +1,39 @@
+<!--index.wxml-->
+<guide index="{{3}}" bindfinish="finish" wx:if="{{showAbout}}"></guide>
+<view class="container">
+<view class="timeHeader" wx:if="{{rtbuttonInfo}}" style="height:{{rtbuttonInfo.height+rtbuttonInfo.top*2}}px;" bindtap="showAbout">
+	<view>语音计算助手</view>
+	<view class="subTitle">@人机交互实例，点击查看相关信息</view>
+</view>
+  <scroll-view id="scroll-content"
+    scroll-top="{{scroll_top}}"
+    scroll-y="true"
+    class="dialog-part"
+    style="top:{{rtbuttonInfo.height+rtbuttonInfo.top*2+5}}px;"
+    scroll-into-view="translate-{{toView}}"
+    enable-back-to-top="true"
+    scroll-with-animation="true">
+    <view class="dialog-wrap" id="translate-empty" wx:if="{{!recording && dialogList.length == 0}}">
+      <result-bubble item="{{initTranslate}}" record-status="0"></result-bubble>
+    </view>
+    <view wx:for="{{dialogList}}" wx:key="id" class="dialog-wrap" data-index="{{index}}" catchmodaldelete="deleteItem">
+      <result-bubble item="{{item}}"
+        edit-show="{{index==dialogList.length-1}}"
+        index="{{index}}"
+        current-translate-voice="{{currentTranslateVoice}}"
+        bindtranslate="translateTextAction"
+        bindexpired="expiredAction"></result-bubble>
+    </view>
+    <view class="dialog-wrap" id="translate-recording" wx:if="{{recording}}">
+      <result-bubble item="{{currentTranslate}}" record-status="{{recordStatus}}"></result-bubble>
+    </view>
+    <view id="translate-fake"></view>
+
+  </scroll-view>
+
+  <view class="foot-group" catchlongpress="catchTapEvent">
+    <bottom-button button-disabled="{{bottomButtonDisabled}}"
+      bindrecordstart="streamRecord"
+      bindrecordend="streamRecordEnd"></bottom-button>
+  </view>
+</view>
